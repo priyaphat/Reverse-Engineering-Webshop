@@ -1,0 +1,36 @@
+@baseUrl = http://localhost:3000
+
+### Health
+GET {{baseUrl}}/health
+
+### Verify UID (mock fixture)
+POST {{baseUrl}}/api/v1/aniimo/verify
+Content-Type: application/json
+
+{
+  "uid": "10000001",
+  "server": "TW1"
+}
+
+### Invalid UID / server
+POST {{baseUrl}}/api/v1/aniimo/verify
+Content-Type: application/json
+
+{
+  "uid": "99999999",
+  "server": "TW1"
+}
+
+### Create a verified MyCard top-up session
+POST {{baseUrl}}/api/v1/aniimo/sessions
+Content-Type: application/json
+
+{
+  "uid": "10000001",
+  "server": "TW1",
+  "productId": "pack.twd.01",
+  "paymentMethod": "mycard"
+}
+
+### Read a session (replace the id)
+GET {{baseUrl}}/api/v1/aniimo/sessions/SESSION_ID

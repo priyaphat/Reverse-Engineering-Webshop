@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="theme-color" content="#e9f4f4" />
+    <meta name="description" content="Aniimo Taiwan UID Top-Up demo storefront" />
+    <title>ร้านค้า Aniimo UID Top-Up | Taiwan</title>
+    <link rel="icon" href="/assets/aniimo/logo.webp" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <header class="store-header">
+      <a class="back-link" href="https://www.aniimo.com/" target="_blank" rel="noreferrer">
+        <span class="round-icon" aria-hidden="true">←</span><span class="back-copy">กลับไปที่เว็บไซต์ทางการ</span>
+      </a>
+      <a class="wordmark" href="#top" aria-label="Aniimo shop"><img src="/assets/aniimo/logo.webp" alt="ANIIMO" /></a>
+      <button class="account-button" id="account-button" type="button" aria-haspopup="dialog">
+        <span class="account-copy"><small id="account-status">ยังไม่ได้ตรวจสอบ UID</small><strong id="account-name">เข้าสู่ร้านค้า</strong></span>
+        <span class="round-icon profile-icon" aria-hidden="true">●</span>
+      </button>
+    </header>
+
+    <main id="top" class="store-main">
+      <div class="utility-row">
+        <button class="utility-pill" id="benefits-button" type="button"><span aria-hidden="true">✦</span> ศูนย์สิทธิประโยชน์</button>
+        <button class="help-button" id="help-button" type="button" aria-label="วิธีการเติมเงิน">?</button>
+      </div>
+      <section class="hero-banner" aria-label="สิทธิประโยชน์ร้านค้า Aniimo">
+        <picture><source media="(max-width: 750px)" srcset="/assets/aniimo/banner-mobile.webp" /><img src="/assets/aniimo/banner-desktop.webp" alt="สิทธิประโยชน์พิเศษเฉพาะร้านค้าทางการ Aniimo" /></picture>
+      </section>
+      <section class="catalog" aria-labelledby="catalog-title">
+        <h1 id="catalog-title" class="sr-only">เลือกสินค้า Aniimo</h1>
+        <div class="category-tabs" role="tablist" aria-label="หมวดหมู่สินค้า">
+          <button type="button" role="tab" data-category="all">ทั้งหมด</button>
+          <button type="button" role="tab" data-category="monthly">บัตรผ่านรายเดือน</button>
+          <button type="button" role="tab" data-category="battlepass">บัตรผ่านเส้นทาง</button>
+          <button class="active" type="button" role="tab" aria-selected="true" data-category="currency">คริสตัลลูมิน</button>
+        </div>
+        <div id="product-grid" class="product-grid"></div>
+        <div id="empty-state" class="empty-state" hidden><span aria-hidden="true">✦</span><strong>ยังไม่มีสินค้าในหมวดหมู่นี้</strong><p>ลองเลือก “ทั้งหมด” หรือ “คริสตัลลูมิน”</p></div>
+      </section>
+      <aside class="demo-note"><span aria-hidden="true">i</span><p><strong>Demo environment</strong> ระบบนี้สร้าง MyCard top-up session สำหรับทดสอบเท่านั้น ไม่มีการหักเงินจริง</p></aside>
+
+      <section class="uid-demo" id="uid-demo" aria-labelledby="uid-demo-title">
+        <header class="uid-demo-heading">
+          <span class="example-badge">ตัวอย่าง</span>
+          <h2 id="uid-demo-title">การเติมเกมด้วย <em>UID</em></h2>
+          <p>เพียงกรอก UID ก็สามารถตรวจสอบตัวละคร เลือกสินค้า และสร้างออเดอร์ได้เลย</p>
+        </header>
+
+        <div class="uid-flow-grid">
+          <article class="uid-flow-card active" data-demo-card="1">
+            <header><b>1</b><strong>กรอก UID</strong></header>
+            <div class="uid-flow-content">
+              <p class="flow-description">ใส่ UID ของลูกค้าเพื่อค้นหาข้อมูลตัวละคร</p>
+              <div class="mini-brand"><img src="/assets/aniimo/logo.webp" alt="ANIIMO" /><span>เครื่องมือเติมเงิน</span></div>
+              <h3>เติมเงินให้ลูกค้า</h3>
+              <div class="mini-notice"><strong>เติมเกมด้วย UID</strong><span>ไม่ต้องใช้รหัสผ่านหรือข้อมูลบัญชีเกม</span></div>
+              <form id="demo-verify-form" novalidate>
+                <label class="demo-field"><span><b>1</b> กรอก UID</span><input id="demo-uid" inputmode="numeric" maxlength="20" placeholder="กรอก UID ในเกม" value="10000001" /></label>
+                <label class="demo-field"><span>Server</span><select id="demo-server"><option value="TW1">TW1 · Taiwan</option></select></label>
+                <p id="demo-verify-error" class="mini-error" role="alert" hidden></p>
+                <button class="demo-action" id="demo-verify-button" type="submit"><span>ตรวจสอบตัวละคร</span></button>
+              </form>
+            </div>
+          </article>
+
+          <article class="uid-flow-card" data-demo-card="2">
+            <header><b>2</b><strong>ตรวจสอบตัวละคร</strong></header>
+            <div class="uid-flow-content">
+              <p class="flow-description">ระบบจะดึงข้อมูลตัวละครจาก UID เพื่อยืนยันผู้รับ</p>
+              <div class="mini-brand"><img src="/assets/aniimo/logo.webp" alt="ANIIMO" /><span>เครื่องมือเติมเงิน</span></div>
+              <h3>เติมเงินให้ลูกค้า</h3>
+              <div class="mini-loading" id="demo-character-waiting"><span></span><strong>รอการตรวจสอบ UID</strong><small>กรอกข้อมูลในขั้นตอนที่ 1</small></div>
+              <div class="demo-character-result" id="demo-character-result" hidden><div class="demo-character-input"><span><b>1</b> กรอก UID</span><strong id="demo-result-uid">—</strong><small id="demo-result-check">—</small></div><div class="demo-character-profile"><img class="character-avatar" src="/assets/aniimo/character-avatar.webp" alt="ภาพตัวละคร ArielTester" /><div><strong id="demo-character-name">—</strong><span id="demo-character-level">—</span></div><b>ยืนยันแล้ว</b></div></div>
+            </div>
+          </article>
+
+          <article class="uid-flow-card" data-demo-card="3">
+            <header><b>3</b><strong>เลือกแพ็กสินค้า</strong></header>
+            <div class="uid-flow-content">
+              <p class="flow-description">เลือกแพ็กที่ลูกค้าต้องการ ระบบจะแสดงราคา TWD</p>
+              <div class="mini-brand"><img src="/assets/aniimo/logo.webp" alt="ANIIMO" /><span>เครื่องมือเติมเงิน</span></div>
+              <h3>เติมเงินให้ลูกค้า</h3>
+              <div class="demo-package-title"><b>2</b><span><strong>เลือกแพ็ก</strong><small id="demo-package-hint">ตรวจสอบ UID ก่อนเลือกสินค้า</small></span></div>
+              <div class="demo-package-list" id="demo-package-list" aria-label="เลือกแพ็กตัวอย่าง"></div>
+            </div>
+          </article>
+
+          <article class="uid-flow-card" data-demo-card="4">
+            <header><b>4</b><strong>สร้างออเดอร์และชำระเงิน</strong></header>
+            <div class="uid-flow-content">
+              <p class="flow-description">ตรวจสอบข้อมูลอีกครั้ง แล้วสร้างออเดอร์เพื่อชำระเงิน</p>
+              <div class="mini-brand"><img src="/assets/aniimo/logo.webp" alt="ANIIMO" /><span>เครื่องมือเติมเงิน</span></div>
+              <h3>เติมเงินให้ลูกค้า</h3>
+              <div id="demo-order-content">
+                <div class="demo-package-title"><b>3</b><span><strong>ยืนยันการสั่งซื้อ</strong><small>ตรวจสอบข้อมูลก่อนสร้างออเดอร์</small></span></div>
+                <dl class="demo-order-summary"><div><dt>ชื่อตัวละคร</dt><dd id="demo-order-character">—</dd></div><div><dt>UID</dt><dd id="demo-order-uid">—</dd></div><div><dt>Server</dt><dd id="demo-order-server">—</dd></div><div><dt>แพ็ก</dt><dd id="demo-order-product">—</dd></div><div><dt>ยอดรวม</dt><dd id="demo-order-total">—</dd></div><div><dt>ช่องทาง</dt><dd>MyCard</dd></div></dl>
+                <p id="demo-order-error" class="mini-error" role="alert" hidden></p>
+                <button class="demo-action" id="demo-create-order" type="button" disabled><span>สร้างออเดอร์</span></button>
+              </div>
+              <div class="demo-order-success" id="demo-order-success" hidden><div class="success-mark">✓</div><strong>สร้างออเดอร์สำเร็จ</strong><span id="demo-order-session">—</span><button class="demo-action" id="demo-reset" type="button">ทำรายการใหม่</button></div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="store-footer">
+      <nav aria-label="Legal links"><a href="https://pawprintstudio.com/terms-of-use" target="_blank" rel="noreferrer">Terms of Use</a><i></i><a href="https://pawprintstudio.com/privacy-policy" target="_blank" rel="noreferrer">Privacy Policy</a><i></i><a href="https://pawprintstudio.com/cookies-policy" target="_blank" rel="noreferrer">Cookies Policy</a></nav>
+      <p>UID TOP-UP DEMO · TAIWAN · TWD · MYCARD</p>
+      <small>Visual study inspired by the Aniimo official store. Not an official payment service.</small>
+    </footer>
+
+    <button class="topup-launcher" id="topup-launcher" type="button" aria-haspopup="dialog">
+      <span class="launcher-mark"><img src="/assets/aniimo/logo.webp" alt="" /></span>
+      <span><small>ANIIMO · เติมเงินเกม</small><strong>เติมด้วย UID</strong></span>
+    </button>
+
+    <div class="topup-shell" id="topup-wizard" hidden>
+      <button class="topup-scrim" type="button" data-wizard-close aria-label="ปิดหน้าต่างเติมเงิน"></button>
+      <section class="topup-panel" role="dialog" aria-modal="true" aria-labelledby="wizard-title">
+        <header class="topup-panel-header">
+          <div><img src="/assets/aniimo/logo.webp" alt="ANIIMO" /><span>UID TOP-UP</span></div>
+          <button type="button" data-wizard-close aria-label="ปิด">×</button>
+        </header>
+        <div class="wizard-heading"><span class="wizard-kicker">TAIWAN · TWD · MYCARD</span><h2 id="wizard-title">เติมเกมด้วย UID</h2><p>กรอก UID เพื่อตรวจสอบตัวละคร เลือกแพ็ก และสร้างออเดอร์</p></div>
+        <ol class="wizard-progress" aria-label="ขั้นตอนการเติมเกม">
+          <li class="active" data-wizard-progress="1"><b>1</b><span>กรอก UID</span></li>
+          <li data-wizard-progress="2"><b>2</b><span>ตรวจสอบ</span></li>
+          <li data-wizard-progress="3"><b>3</b><span>เลือกแพ็ก</span></li>
+          <li data-wizard-progress="4"><b>4</b><span>สร้างออเดอร์</span></li>
+        </ol>
+
+        <div class="wizard-body">
+          <section class="wizard-step active" data-wizard-step="1">
+            <div class="wizard-step-title"><b>1</b><div><strong>กรอก UID</strong><span>ใส่รหัสตัวละครและเลือกเซิร์ฟเวอร์</span></div></div>
+            <form id="wizard-verify-form" novalidate>
+              <label class="field"><span>UID ตัวละคร</span><input id="wizard-uid" inputmode="numeric" autocomplete="off" maxlength="20" placeholder="กรอก UID เช่น 10000001" required /><small>Demo UID: 10000001</small></label>
+              <label class="field"><span>เซิร์ฟเวอร์</span><span class="locked-select"><select id="wizard-server"><option value="TW1">TW1 · Taiwan</option></select><i>TW</i></span></label>
+              <p id="wizard-verify-error" class="form-error" role="alert" hidden></p>
+              <button class="wizard-action" id="wizard-verify-button" type="submit"><span>ตรวจสอบตัวละคร</span><i>→</i></button>
+            </form>
+          </section>
+
+          <section class="wizard-step" data-wizard-step="2" hidden>
+            <div class="wizard-step-title"><b>2</b><div><strong>ตรวจสอบตัวละคร</strong><span>ยืนยันข้อมูลก่อนเลือกสินค้า</span></div></div>
+            <div class="wizard-character"><span class="character-avatar" id="wizard-avatar">A</span><div><small>พบตัวละคร</small><strong id="wizard-character-name">—</strong><span id="wizard-character-meta">—</span></div><span class="verified-tag">ยืนยันแล้ว</span></div>
+            <div class="wizard-safe"><strong>ข้อมูลถูกต้องหรือไม่?</strong><p>ออเดอร์จะถูกส่งไปยัง UID นี้ กรุณาตรวจสอบก่อนดำเนินการต่อ</p></div>
+            <div class="wizard-actions"><button class="wizard-back" type="button" data-wizard-back="1">แก้ไข UID</button><button class="wizard-action" type="button" data-wizard-next="3">ข้อมูลถูกต้อง</button></div>
+          </section>
+
+          <section class="wizard-step" data-wizard-step="3" hidden>
+            <div class="wizard-step-title"><b>3</b><div><strong>เลือกแพ็กสินค้า</strong><span>ราคาสำหรับภูมิภาค Taiwan (TWD)</span></div></div>
+            <div class="wizard-packages" id="wizard-packages" role="radiogroup" aria-label="แพ็กเติมเกม"></div>
+            <div class="wizard-actions"><button class="wizard-back" type="button" data-wizard-back="2">ย้อนกลับ</button><button class="wizard-action" id="wizard-package-next" type="button">ตรวจสอบออเดอร์</button></div>
+          </section>
+
+          <section class="wizard-step" data-wizard-step="4" hidden>
+            <div id="wizard-order-content">
+              <div class="wizard-step-title"><b>4</b><div><strong>สร้างออเดอร์และชำระเงิน</strong><span>ตรวจสอบข้อมูลครั้งสุดท้าย</span></div></div>
+              <dl class="wizard-summary"><div><dt>ตัวละคร</dt><dd id="wizard-summary-character">—</dd></div><div><dt>UID / Server</dt><dd id="wizard-summary-uid">—</dd></div><div><dt>สินค้า</dt><dd id="wizard-summary-product">—</dd></div><div><dt>ยอดรวม</dt><dd id="wizard-summary-total">—</dd></div><div><dt>ชำระผ่าน</dt><dd>MyCard</dd></div></dl>
+              <p id="wizard-order-error" class="form-error" role="alert" hidden></p>
+              <div class="wizard-actions"><button class="wizard-back" type="button" data-wizard-back="3">ย้อนกลับ</button><button class="wizard-action" id="wizard-create-order" type="button"><span>สร้างออเดอร์</span><i>→</i></button></div>
+            </div>
+            <div class="wizard-success" id="wizard-success" hidden><div class="success-mark">✓</div><h3>สร้างออเดอร์สำเร็จ</h3><p>MyCard session พร้อมใช้งานแล้ว</p><dl class="wizard-summary"><div><dt>Session ID</dt><dd id="wizard-session-id">—</dd></div><div><dt>หมดอายุ</dt><dd id="wizard-session-expiry">—</dd></div></dl><button class="wizard-action" id="wizard-finish" type="button">เสร็จสิ้น</button></div>
+          </section>
+        </div>
+      </section>
+    </div>
+
+    <div class="dialog-shell login-shell" id="login-dialog" hidden>
+      <button class="dialog-backdrop login-backdrop" type="button" data-close aria-label="ปิด"></button>
+      <section class="dialog login-dialog" role="dialog" aria-modal="true" aria-labelledby="login-title" tabindex="-1" data-initial-focus>
+        <button class="login-close" type="button" data-close aria-label="ปิดหน้าต่างเข้าสู่ระบบ"><img src="/assets/icons/xmark.svg" alt="" /></button>
+        <h2 class="sr-only" id="login-title">ลงชื่อเข้าใช้ Aniimo</h2>
+        <img class="login-logo" src="/assets/aniimo/logo.webp" alt="ANIIMO" />
+        <form id="login-form" novalidate>
+          <label class="login-field">
+            <span class="sr-only">อีเมล</span>
+            <input id="login-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="โปรดกรอกที่อยู่อีเมลของคุณ" required />
+          </label>
+          <label class="login-field login-code-field">
+            <span class="sr-only">รหัสยืนยัน</span>
+            <input id="login-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="โปรดกรอกรหัสยืนยัน" required />
+            <button id="request-login-code" type="button">รับรหัส</button>
+          </label>
+          <label class="login-consent"><input id="login-consent" type="checkbox" /><span>ฉันได้อ่านและยอมรับ<a href="https://pawprintstudio.com/terms-of-use" target="_blank" rel="noreferrer">เงื่อนไขการใช้งาน</a>และ<a href="https://pawprintstudio.com/privacy-policy" target="_blank" rel="noreferrer">นโยบายความเป็นส่วนตัว</a>แล้ว</span></label>
+          <p class="login-error" id="login-error" role="alert" hidden></p>
+          <button class="login-submit" id="login-submit" type="submit"><span>ลงชื่อเข้าใช้</span></button>
+        </form>
+        <div class="login-divider"><span>วิธีเข้าสู่ระบบอื่นๆ</span></div>
+        <div class="social-logins" aria-label="วิธีเข้าสู่ระบบอื่นๆ">
+          <button type="button" data-social="Google" aria-label="เข้าสู่ระบบด้วย Google"><img src="/assets/icons/google.svg" alt="" /></button>
+          <button type="button" data-social="Facebook" aria-label="เข้าสู่ระบบด้วย Facebook"><img src="/assets/icons/facebook-f.svg" alt="" /></button>
+          <button type="button" data-social="Discord" aria-label="เข้าสู่ระบบด้วย Discord"><img src="/assets/icons/discord.svg" alt="" /></button>
+          <button type="button" data-social="LINE" aria-label="เข้าสู่ระบบด้วย LINE"><img src="/assets/icons/line.svg" alt="" /></button>
+          <button type="button" data-social="TikTok" aria-label="เข้าสู่ระบบด้วย TikTok"><img src="/assets/icons/tiktok.svg" alt="" /></button>
+          <button type="button" data-social="VK" aria-label="เข้าสู่ระบบด้วย VK"><img src="/assets/icons/vk.svg" alt="" /></button>
+        </div>
+      </section>
+    </div>
+
+    <div class="dialog-shell" id="benefits-dialog" hidden><button class="dialog-backdrop" type="button" data-close aria-label="ปิด"></button><section class="dialog benefits-dialog" role="dialog" aria-modal="true" aria-labelledby="benefits-title"><button class="dialog-close" type="button" data-close aria-label="ปิด">×</button><h2 id="benefits-title">ศูนย์สิทธิประโยชน์</h2><div class="dialog-tabs"><button class="active" type="button">คูปอง</button><button type="button">อั่งเปา</button></div><div class="coupon-empty"><span>✦</span><p>ไม่มีคูปองที่พร้อมใช้งาน</p></div></section></div>
+
+    <div class="dialog-shell" id="help-dialog" hidden><button class="dialog-backdrop" type="button" data-close aria-label="ปิด"></button><section class="dialog guide-dialog" role="dialog" aria-modal="true" aria-labelledby="help-title"><button class="dialog-close" type="button" data-close aria-label="ปิด">×</button><h2 id="help-title">วิธีการเติมเงิน</h2><ol class="guide-list"><li><b>1</b><div><strong>ตรวจสอบ UID</strong><p>กรอก UID ตัวละคร 6–20 หลัก ระบบจะล็อกเซิร์ฟเวอร์ Taiwan (TW1)</p></div></li><li><b>2</b><div><strong>ยืนยันชื่อตัวละคร</strong><p>ตรวจสอบชื่อและ UID ให้ถูกต้องก่อนเลือกแพ็ก</p></div></li><li><b>3</b><div><strong>สร้าง MyCard Session</strong><p>กดสินค้าที่ต้องการและยืนยัน ระบบจะสร้าง session ทดสอบโดยไม่ตัดเงินจริง</p></div></li></ol><button class="dialog-primary" type="button" data-close>รับทราบ</button></section></div>
+
+    <div class="dialog-shell" id="verify-dialog" hidden>
+      <button class="dialog-backdrop" type="button" data-close aria-label="ปิด"></button>
+      <section class="dialog verify-dialog" role="dialog" aria-modal="true" aria-labelledby="verify-title">
+        <button class="dialog-close" type="button" data-close aria-label="ปิด">×</button><a class="wordmark dialog-logo" href="#top"><img src="/assets/aniimo/logo.webp" alt="ANIIMO" /></a><h2 id="verify-title">ตรวจสอบ UID ตัวละคร</h2><p class="dialog-lead">ไม่ต้องเข้าสู่ระบบ และไม่ต้องใช้รหัสผ่าน</p>
+        <form id="verify-form" novalidate><label class="field"><span>UID ตัวละคร</span><input id="uid" name="uid" inputmode="numeric" autocomplete="off" maxlength="20" placeholder="เช่น 10000001" required /><small>สำหรับ Demo ใช้ UID 10000001</small></label><label class="field"><span>เซิร์ฟเวอร์</span><span class="locked-select"><select id="server" name="server"><option value="TW1">TW1 · Taiwan</option></select><i>TW</i></span></label><p id="verify-error" class="form-error" role="alert" hidden></p><button class="dialog-primary" id="verify-submit" type="submit"><span>ตรวจสอบตัวละคร</span><i>→</i></button></form>
+        <div class="safe-note"><span>✓</span> เราไม่ขอรหัสผ่านหรือข้อมูลบัญชีเกม</div>
+      </section>
+    </div>
+
+    <div class="dialog-shell" id="checkout-dialog" hidden>
+      <button class="dialog-backdrop" type="button" data-close aria-label="ปิด"></button>
+      <section class="dialog checkout-dialog" role="dialog" aria-modal="true" aria-labelledby="checkout-title"><button class="dialog-close" type="button" data-close aria-label="ปิด">×</button>
+        <div id="checkout-content"><span class="dialog-kicker">ยืนยันคำสั่งซื้อ</span><h2 id="checkout-title">สร้าง MyCard Session</h2><div class="checkout-character"><span class="character-avatar" id="checkout-avatar">A</span><div><small>เติมให้ตัวละคร</small><strong id="checkout-character">—</strong><span id="checkout-meta">—</span></div><button id="change-uid" type="button">เปลี่ยน</button></div><div class="checkout-product"><img id="checkout-image" src="" alt="" /><div><small>คริสตัลลูมิน</small><strong id="checkout-product-name">—</strong><span id="checkout-bonus">—</span></div><strong id="checkout-price">—</strong></div><div class="payment-method"><span class="mycard-logo">MY</span><div><small>ช่องทางชำระเงิน</small><strong>MyCard</strong></div><span class="selected-check">✓</span></div><p id="checkout-error" class="form-error" role="alert" hidden></p><button class="dialog-primary" id="create-session" type="button"><span>สร้าง Session</span><i>→</i></button></div>
+        <div id="success-content" class="success-content" hidden><div class="success-mark">✓</div><span class="dialog-kicker">SESSION READY</span><h2>พร้อมสำหรับขั้นตอน MyCard</h2><p>สร้าง top-up session แล้ว และยังไม่มีการตัดเงินจริง</p><dl class="receipt"><div><dt>ตัวละคร</dt><dd id="receipt-character">—</dd></div><div><dt>แพ็ก</dt><dd id="receipt-package">—</dd></div><div><dt>Session ID</dt><dd id="receipt-session">—</dd></div><div><dt>หมดอายุ</dt><dd id="receipt-expiry">—</dd></div></dl><button class="dialog-primary" id="finish-session" type="button">กลับไปหน้าร้าน</button></div>
+      </section>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "aniimo-uid-topup-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Defensive REST API facade for Aniimo Taiwan UID verification and top-up sessions.",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "test": "node --test",
+    "check": "node --check src/server.js && node --check src/app.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^7.1.0"
+  }
+}
